@@ -1,0 +1,22 @@
+import axios from 'axios';
+
+export default ({ req }) => {
+  if (typeof window === 'undefined') {
+    /*
+     * On the server we need to communicate through
+     * cross namespace service communication
+     * http://{SERVICE_NAME}.{NAMESPACE}.svc.cluster.local
+     */
+    return axios.create({
+      baseURL: 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local',
+      headers: req.headers,
+    });
+  } else {
+    /*
+     * On the browser request can be made as normal
+     */
+    return axios.create({
+      baseURL: '/',
+    });
+  }
+};
